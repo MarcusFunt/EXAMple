@@ -1,0 +1,8 @@
+__pycache__/
+.env
+data/
+notes/**
+!notes/
+!notes/**/.gitkeep
+scripts/detect_hardware.sh.log
+*.log
