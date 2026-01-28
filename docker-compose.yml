@@ -1,0 +1,38 @@
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - "11434:11434"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    restart: unless-stopped
+
+  notes-ai:
+    build: .
+    container_name: notes-ai
+    depends_on:
+      - ollama
+    ports:
+      - "8501:8501"
+    env_file:
+      - .env
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - NOTES_DIR=/notes
+      - CHROMA_DIR=/app/data/chroma
+      - INDEX_PATH=/app/data/central_index.json
+    volumes:
+      - ./notes:/notes
+      - ./data:/app/data
+    restart: unless-stopped
+
+volumes:
+  ollama_data:
