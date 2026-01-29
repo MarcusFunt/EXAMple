@@ -4,8 +4,8 @@ Welcome, Agent! This project is structured as a LangChain RAG application. Here 
 
 ## Project Structure
 
-- `app/`: Contains the Python source code for the AI logic and UI.
-  - `main.py`: Streamlit entry point.
+- `app/`: Contains the Python source code for the AI logic and API.
+  - `main.py`: FastAPI entry point.
   - `document_processor.py`: Handles file loading and splitting.
   - `vector_store.py`: Manages ChromaDB and HuggingFace Embeddings.
   - `summarizer.py`: Logic for the "Central Index" summarization.

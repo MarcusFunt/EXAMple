@@ -18,9 +18,9 @@ This document outlines why certain choices were made during the development of t
 **Choice**: ChromaDB.
 **Reasoning**: It is lightweight, persists to disk easily, and integrates seamlessly with LangChain. It doesn't require a separate database server, keeping the Docker setup simple.
 
-## UI (Streamlit)
-**Choice**: Streamlit.
-**Reasoning**: While a "native" app was preferred, Streamlit provides a web interface that feels like an application and can be easily served from a Docker container without the overhead of Electron or complex frontend-backend separation.
+## UI (Vite + React)
+**Choice**: Vite + React.
+**Reasoning**: A lightweight React frontend provides a responsive chat UI, while a FastAPI backend serves APIs and static assets without Streamlit-specific constraints.
 
 ## Embeddings (HuggingFace)
 **Choice**: `all-MiniLM-L6-v2` via HuggingFaceEmbeddings.

@@ -4,7 +4,8 @@ langchain-ollama
 langchain-huggingface
 langchain-text-splitters
 chromadb
-streamlit
+fastapi
+uvicorn
 pypdf
 sentence-transformers
 unstructured

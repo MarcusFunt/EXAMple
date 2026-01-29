@@ -6,3 +6,4 @@ notes/**
 !notes/**/.gitkeep
 scripts/detect_hardware.sh.log
 *.log
+web/node_modules/
