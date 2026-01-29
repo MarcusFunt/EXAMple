@@ -1,5 +1,4 @@
 from langchain_ollama import OllamaLLM
-from langchain.chains import RetrievalQA
 from langchain_core.prompts import PromptTemplate
 from summarizer import CentralSummarizer
 from vector_store import VectorStoreManager
