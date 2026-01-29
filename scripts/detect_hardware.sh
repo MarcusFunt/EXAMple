@@ -1,7 +1,11 @@
 #!/bin/bash
 
 # Default values
-TOTAL_RAM_GB=$(free -g | awk '/^Mem:/{print $2}')
+if command -v free &> /dev/null; then
+    TOTAL_RAM_GB=$(free -g | awk '/^Mem:/{print $2}')
+else
+    TOTAL_RAM_GB=$(awk '/^MemTotal:/ {printf "%d", ($2 / 1024 / 1024)}' /proc/meminfo)
+fi
 HAS_NVIDIA=false
 VRAM_GB=0
 CPU_ARCH=$(uname -m)
