@@ -5,10 +5,10 @@ from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from document_processor import DocumentProcessor
-from vector_store import VectorStoreManager
-from summarizer import CentralSummarizer
-from llm_manager import AIChainManager
+from app.document_processor import DocumentProcessor
+from app.vector_store import VectorStoreManager
+from app.summarizer import CentralSummarizer
+from app.llm_manager import AIChainManager
 
 load_dotenv()
 
