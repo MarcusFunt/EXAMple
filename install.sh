@@ -22,14 +22,20 @@ chmod +x scripts/detect_hardware.sh
 
 # Load selected model from .env
 if [ -f .env ]; then
-    export $(grep SELECTED_MODEL .env | xargs)
+    export $(grep -E 'SELECTED_MODEL|HAS_NVIDIA' .env | xargs)
 else
     echo "Error: .env file was not generated."
     exit 1
 fi
 
 echo "Pulling and starting containers..."
-docker compose up -d
+HAS_NVIDIA=${HAS_NVIDIA:-false}
+COMPOSE_FILES=(-f docker-compose.yml)
+if [ "$HAS_NVIDIA" = "true" ]; then
+    COMPOSE_FILES+=(-f docker-compose.gpu.yml)
+fi
+
+docker compose "${COMPOSE_FILES[@]}" up -d
 
 echo "Waiting for Ollama to be ready..."
 until docker exec ollama ollama list &> /dev/null; do

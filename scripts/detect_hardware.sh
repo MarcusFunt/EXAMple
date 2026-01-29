@@ -65,6 +65,7 @@ echo "Selected Model: $SELECTED_MODEL"
 cat << EOF > .env
 SELECTED_MODEL=$SELECTED_MODEL
 HARDWARE_TIER="$TIER"
+HAS_NVIDIA=$HAS_NVIDIA
 EOF
 
 echo ".env file generated successfully."
