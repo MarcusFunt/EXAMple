@@ -1,7 +1,7 @@
 from langchain_ollama import OllamaLLM
 from langchain_core.prompts import PromptTemplate
-from summarizer import CentralSummarizer
-from vector_store import VectorStoreManager
+from app.summarizer import CentralSummarizer
+from app.vector_store import VectorStoreManager
 
 class AIChainManager:
     def __init__(self, model_name: str, vector_store: VectorStoreManager, summarizer: CentralSummarizer, base_url: str = "http://localhost:11434"):

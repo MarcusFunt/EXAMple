@@ -21,14 +21,14 @@ RUN apt-get update && apt-get install -y \
     libmagic-dev \
     && rm -rf /var/lib/apt/lists/*
 
-COPY app/requirements.txt .
+COPY app/requirements.txt ./requirements.txt
 RUN pip3 install --no-cache-dir -r requirements.txt
 
-COPY app/ .
+COPY app/ ./app
 COPY --from=web-build /web/dist ./static
 
 EXPOSE 8000
 
 HEALTHCHECK CMD curl --fail http://localhost:8000/api/health
 
-ENTRYPOINT ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+ENTRYPOINT ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
