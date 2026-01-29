@@ -9,6 +9,11 @@ fi
 HAS_NVIDIA=false
 VRAM_GB=0
 CPU_ARCH=$(uname -m)
+IS_WSL=false
+
+if grep -qi microsoft /proc/sys/kernel/osrelease 2>/dev/null; then
+    IS_WSL=true
+fi
 
 echo "Scanning hardware..."
 echo "CPU Architecture: $CPU_ARCH"
@@ -16,12 +21,21 @@ echo "Total RAM: ${TOTAL_RAM_GB}GB"
 
 # Check for NVIDIA GPU
 if command -v nvidia-smi &> /dev/null; then
-    HAS_NVIDIA=true
-    VRAM_MB=$(nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits | awk '{s+=$1} END {print s}')
-    VRAM_GB=$((VRAM_MB / 1024))
-    echo "NVIDIA GPU detected with ${VRAM_GB}GB VRAM"
+    if nvidia-smi -L &> /dev/null; then
+        HAS_NVIDIA=true
+        VRAM_MB=$(nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits | awk '{s+=$1} END {print s}')
+        VRAM_GB=$((VRAM_MB / 1024))
+        echo "NVIDIA GPU detected with ${VRAM_GB}GB VRAM"
+    else
+        echo "nvidia-smi detected but no GPU adapters available"
+    fi
 else
     echo "No NVIDIA GPU detected via nvidia-smi"
+fi
+
+if [ "$IS_WSL" = true ] && [ "$HAS_NVIDIA" = true ] && [ "$VRAM_GB" -eq 0 ]; then
+    HAS_NVIDIA=false
+    echo "WSL environment detected without usable GPU adapters"
 fi
 
 # Tier Selection Logic
