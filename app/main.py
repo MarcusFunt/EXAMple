@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
@@ -17,7 +17,20 @@ OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
 NOTES_DIR = os.getenv("NOTES_DIR", "./notes")
 CHROMA_DIR = os.getenv("CHROMA_DIR", "./data/chroma")
 INDEX_PATH = os.getenv("INDEX_PATH", "./data/central_index.json")
-STATIC_DIR = os.path.join(os.path.dirname(__file__), "static")
+BASE_DIR = os.path.dirname(__file__)
+DEFAULT_STATIC_DIR = os.path.join(BASE_DIR, "static")
+FALLBACK_STATIC_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "web", "dist"))
+
+
+def resolve_static_dir() -> str | None:
+    if os.path.isdir(DEFAULT_STATIC_DIR):
+        return DEFAULT_STATIC_DIR
+    if os.path.isdir(FALLBACK_STATIC_DIR):
+        return FALLBACK_STATIC_DIR
+    return None
+
+
+STATIC_DIR = resolve_static_dir()
 
 app = FastAPI(title="AI Interactive Notes Server")
 
@@ -70,10 +83,35 @@ def startup_event():
         components["error"] = str(exc)
 
 
-if os.path.isdir(STATIC_DIR):
+if STATIC_DIR and os.path.isdir(STATIC_DIR):
     assets_dir = os.path.join(STATIC_DIR, "assets")
     if os.path.isdir(assets_dir):
         app.mount("/assets", StaticFiles(directory=assets_dir), name="assets")
+
+
+def ui_unavailable_response() -> HTMLResponse:
+    message = """
+    <html>
+      <head><title>UI build missing</title></head>
+      <body style="font-family: Arial, sans-serif; padding: 2rem;">
+        <h1>Web UI not built</h1>
+        <p>The server is running, but the web UI build was not found.</p>
+        <p>
+          To build the UI locally, run:
+        </p>
+        <pre>cd web
+npm install
+npm run build</pre>
+        <p>
+          Alternatively, start the development UI with:
+        </p>
+        <pre>cd web
+npm install
+npm run dev</pre>
+      </body>
+    </html>
+    """
+    return HTMLResponse(message)
 
 
 @app.get("/api/health")
@@ -122,17 +160,21 @@ def chat(request: ChatRequest):
 
 @app.get("/")
 def serve_index():
+    if not STATIC_DIR:
+        return ui_unavailable_response()
     index_path = os.path.join(STATIC_DIR, "index.html")
     if os.path.exists(index_path):
         return FileResponse(index_path)
-    raise HTTPException(status_code=404, detail="UI not built.")
+    return ui_unavailable_response()
 
 
 @app.get("/{path_name:path}")
 def serve_spa(path_name: str):
     if path_name.startswith("api/"):
         raise HTTPException(status_code=404, detail="Not found")
+    if not STATIC_DIR:
+        return ui_unavailable_response()
     index_path = os.path.join(STATIC_DIR, "index.html")
     if os.path.exists(index_path):
         return FileResponse(index_path)
-    raise HTTPException(status_code=404, detail="UI not built.")
+    return ui_unavailable_response()
