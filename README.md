@@ -35,6 +35,7 @@ This project is a locally hosted AI assistant designed to help students interact
    - Generate a `.env` file with the best model for your system.
    - Start the Docker containers (Ollama and the Web App).
    - Pull the selected model automatically.
+   - If an NVIDIA GPU is detected, it will also enable the GPU override compose file (`docker-compose.gpu.yml`).
 
 3. **Add Your Notes**:
    Place your files in the `notes/` directory. You can use the following structure:
