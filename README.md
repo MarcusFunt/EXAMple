@@ -8,7 +8,7 @@ This project is a locally hosted AI assistant designed to help students interact
 - **Categorized Search**: Handles notes sorted by subject and type (General, Templates, Examples, Teacher-provided).
 - **Central Index Summarization**: Automatically generates summaries of new files to provide high-level context during Q&A.
 - **Dockerized**: Easy deployment with Docker and Docker Compose.
-- **Web UI**: User-friendly chat interface built with Streamlit.
+- **Web UI**: User-friendly chat interface built with Vite + React.
 - **Multiformat Support**: Supports Markdown (.md), PDF, and Text (.txt) files.
 
 ## Prerequisites
@@ -45,7 +45,7 @@ This project is a locally hosted AI assistant designed to help students interact
    - `notes/teacher_provided/`: Official materials.
 
 4. **Access the Web Interface**:
-   Open your browser and go to `http://localhost:8501`.
+   Open your browser and go to `http://localhost:8000`.
 
 ## Usage
 

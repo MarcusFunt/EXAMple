@@ -14,7 +14,7 @@ services:
     depends_on:
       - ollama
     ports:
-      - "8501:8501"
+      - "8000:8000"
     env_file:
       - .env
     environment:
